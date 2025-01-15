@@ -1,16 +1,17 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { Graph } = require("rdflib");
+const rdf = require("rdflib");
 
 const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
 
+// Création du graphe
+const g = rdf.graph();
+
 // Chargement de l'ontologie (en français)
-const g = new Graph();
-g.parse(
-  `
+const ontologie = `
   @prefix : <http://example.org/ontologies/voiture#> .
   @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
   @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -49,7 +50,13 @@ g.parse(
     :produitePar :Volkswagen ;
     :aTypeCarburant :Essence ;
     :aStyle :LigneDroite .
-  `,
+`;
+
+// Charger les données dans le graphe
+rdf.parse(
+  ontologie,
+  g,
+  "http://example.org/ontologies/voiture#",
   "text/turtle"
 );
 
@@ -57,18 +64,22 @@ g.parse(
 app.get("/voitures/style", (req, res) => {
   const style = req.query.style;
   const query = `
-  PREFIX : <http://example.org/ontologies/voiture#>
-  SELECT ?voiture ?marque
-  WHERE {
-    ?voiture :aStyle :${style} ;
-             :produitePar ?marque .
-  }`;
+    PREFIX : <http://example.org/ontologies/voiture#>
+    SELECT ?voiture ?marque
+    WHERE {
+      ?voiture :aStyle :${style} ;
+               :produitePar ?marque .
+    }
+  `;
   try {
-    const results = g.query(query);
-    const formattedResults = results.map((row) => ({
-      voiture: row.voiture.value.split("#")[1],
-      marque: row.marque.value.split("#")[1],
-    }));
+    const results = rdf.SPARQLToQuery(query, false, g);
+    const formattedResults = [];
+    g.query(results, (row) => {
+      formattedResults.push({
+        voiture: row.voiture.value.split("#")[1],
+        marque: row.marque.value.split("#")[1],
+      });
+    });
     res.json({ results: formattedResults });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -79,18 +90,22 @@ app.get("/voitures/style", (req, res) => {
 app.get("/voitures/carburant", (req, res) => {
   const carburant = req.query.carburant;
   const query = `
-  PREFIX : <http://example.org/ontologies/voiture#>
-  SELECT ?voiture ?marque
-  WHERE {
-    ?voiture :aTypeCarburant :${carburant} ;
-             :produitePar ?marque .
-  }`;
+    PREFIX : <http://example.org/ontologies/voiture#>
+    SELECT ?voiture ?marque
+    WHERE {
+      ?voiture :aTypeCarburant :${carburant} ;
+               :produitePar ?marque .
+    }
+  `;
   try {
-    const results = g.query(query);
-    const formattedResults = results.map((row) => ({
-      voiture: row.voiture.value.split("#")[1],
-      marque: row.marque.value.split("#")[1],
-    }));
+    const results = rdf.SPARQLToQuery(query, false, g);
+    const formattedResults = [];
+    g.query(results, (row) => {
+      formattedResults.push({
+        voiture: row.voiture.value.split("#")[1],
+        marque: row.marque.value.split("#")[1],
+      });
+    });
     res.json({ results: formattedResults });
   } catch (error) {
     res.status(400).json({ error: error.message });
