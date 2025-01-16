@@ -321,14 +321,26 @@ function App() {
                       className="bg-white dark:border-gray-700 dark:bg-gray-800"
                     >
                       <Table.Cell className="font-medium text-gray-900 dark:text-white">
-                        {voiture.voiture}
+                        <span className="ml-16">{voiture.voiture}</span>
                       </Table.Cell>
-                      <Table.Cell>{voiture.marque}</Table.Cell>
-                      <Table.Cell>{voiture.style}</Table.Cell>
-                      <Table.Cell>{voiture.carburant}</Table.Cell>
-                      <Table.Cell>{voiture.cylindre}</Table.Cell>
-                      <Table.Cell>{voiture.consommation}</Table.Cell>
-                      <Table.Cell>{voiture.prix}</Table.Cell>
+                      <Table.Cell>
+                        <span className="ml-16">{voiture.marque}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span className="ml-16">{voiture.style}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span className="ml-16">{voiture.carburant}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span className="ml-16">{voiture.cylindre}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span className="ml-16">{voiture.consommation}</span>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <span className="ml-16">{voiture.prix}</span>
+                      </Table.Cell>
                     </Table.Row>
                   ))
                 ) : (
