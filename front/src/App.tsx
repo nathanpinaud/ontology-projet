@@ -8,11 +8,9 @@ function App() {
   const [style, setStyle] = useState(""); // Filtre pour le style
   const [carburant, setCarburant] = useState(""); // Filtre pour le carburant
   const [marque, setMarque] = useState(""); // Filtre pour la marque
-  const [consommationMin, setConsommationMin] = useState(""); // Consommation min
-  const [consommationMax, setConsommationMax] = useState(""); // Consommation max
-  const [puissanceMin, setPuissanceMin] = useState(""); // Puissance min
-  const [puissanceMax, setPuissanceMax] = useState(""); // Puissance max
+  const [consommation, setConsommation] = useState(""); // Filtre pour la consommation
   const [cylindres, setCylindres] = useState(""); // Filtre pour le nombre de cylindres
+  const [puissance, setPuissance] = useState(""); // Filtre pour la puissance
   const [voitures, setVoitures] = useState([]); // Résultats de recherche
   const [error, setError] = useState(null); // Gestion des erreurs
 
@@ -21,6 +19,8 @@ function App() {
   const [marquesOptions, setMarquesOptions] = useState([]);
   const [carburantsOptions, setCarburantsOptions] = useState([]);
   const [cylindresOptions, setCylindresOptions] = useState([]);
+  const [consommationOptions, setConsommationOptions] = useState([]);
+  const [puissanceOptions, setPuissanceOptions] = useState([]);
 
   // Fonction de recherche combinée
   const fetchByAllFilters = async () => {
@@ -31,11 +31,9 @@ function App() {
         style,
         carburant,
         marque,
-        consommationMin,
-        consommationMax,
-        puissanceMin,
-        puissanceMax,
+        consommation,
         cylindres,
+        puissance,
       };
 
       // Exclure les champs vides
@@ -94,11 +92,33 @@ function App() {
     }
   };
 
+  const fetchConsommation = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/consommation");
+      const data = await response.json();
+      setConsommationOptions(data.results || []);
+    } catch (err) {
+      console.error("Erreur lors de la récupération des consommations.");
+    }
+  };
+
+  const fetchPuissance = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/puissance");
+      const data = await response.json();
+      setPuissanceOptions(data.results || []);
+    } catch (err) {
+      console.error("Erreur lors de la récupération des puissances.");
+    }
+  };
+
   useEffect(() => {
     fetchStyles();
     fetchMarques();
     fetchCarburants();
     fetchCylindres();
+    fetchConsommation();
+    fetchPuissance();
   }, []);
 
   return (
@@ -189,27 +209,29 @@ function App() {
                   </select>
                 </div>
 
-                {/* Filtre : Consommation (min & max) */}
+                {/* Filtre : Consommation */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-900">
+                  <label
+                    htmlFor="consommation"
+                    className="block text-sm font-medium text-gray-900"
+                  >
                     Consommation (L/100km)
                   </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      className="w-1/2 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                      value={consommationMin}
-                      onChange={(e) => setConsommationMin(e.target.value)}
-                      placeholder="Min"
-                    />
-                    <input
-                      type="number"
-                      className="w-1/2 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                      value={consommationMax}
-                      onChange={(e) => setConsommationMax(e.target.value)}
-                      placeholder="Max"
-                    />
-                  </div>
+                  <select
+                    id="consommation"
+                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
+                    value={consommation}
+                    onChange={(e) => setConsommation(e.target.value)}
+                  >
+                    <option value="">
+                      -- Sélectionnez une consommation --
+                    </option>
+                    {consommationOptions.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Filtre : Nombre de cylindres */}
@@ -235,27 +257,27 @@ function App() {
                   </select>
                 </div>
 
-                {/* Filtre : Puissance (min & max) */}
+                {/* Filtre : Puissance */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-900">
+                  <label
+                    htmlFor="puissance"
+                    className="block text-sm font-medium text-gray-900"
+                  >
                     Puissance (CV)
                   </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      className="w-1/2 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                      value={puissanceMin}
-                      onChange={(e) => setPuissanceMin(e.target.value)}
-                      placeholder="Min"
-                    />
-                    <input
-                      type="number"
-                      className="w-1/2 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
-                      value={puissanceMax}
-                      onChange={(e) => setPuissanceMax(e.target.value)}
-                      placeholder="Max"
-                    />
-                  </div>
+                  <select
+                    id="puissance"
+                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
+                    value={puissance}
+                    onChange={(e) => setPuissance(e.target.value)}
+                  >
+                    <option value="">-- Sélectionnez une puissance --</option>
+                    {puissanceOptions.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Gestion des erreurs */}
