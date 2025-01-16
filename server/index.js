@@ -179,7 +179,7 @@ app.get("/voitures", async (req, res) => {
 
   let query = `
             PREFIX : <http://example.org/ontologies/voiture#>
-            SELECT ?voiture ?marque ?Style ?TypeCarburant ?Cylindre ?Consommation
+            SELECT ?voiture ?marque ?style ?typecarburant ?cylindre ?consommation
             WHERE {
             ?voiture rdf:type :Voiture .
         `;
@@ -222,8 +222,8 @@ app.get("/voitures", async (req, res) => {
       formattedResults.push({
         voiture: row["?voiture"].value.split("#")[1],
         marque: row["?marque"].value.split("#")[1],
-        style: row["?Style"].value.split("#")[1],
-        //carburant: row["?TypeCarburant"].value.split("#")[1],
+        //style: row["?Style"].value.split("#")[1],
+        carburant: row["?TypeCarburant"].value.split("#")[1],
       });
     });
     setTimeout(() => {
