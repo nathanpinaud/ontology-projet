@@ -144,3 +144,40 @@
   :aChevaux 115 ;
   :aCylindres 4 ;
   :aConsommation 4.8 .
+
+:308 rdf:type :Voiture ;
+  :produitePar :Peugeot ;
+  :aTypeCarburant :Diesel ;
+  :aStyle :Urbain ;
+  :aPrix 22000.00 ;
+  :aChevaux 110 ;
+  :aCylindres 4 ;
+  :aConsommation 4.7 .
+
+:F40 rdf:type :Voiture ;
+  :produitePar :Ferrari ;
+  :aTypeCarburant :Essence ;
+  :aStyle :StyleSport ;
+  :aPrix 1000000.00 ;
+  :aChevaux 500 ;
+  :aCylindres 8 ;
+  :aConsommation 15.0 .
+
+:GT3RS rdf:type :Voiture ;
+  :produitePar :Porsche ;
+  :aTypeCarburant :Essence ;
+  :aStyle :StyleSport ;
+  :aPrix 200000.00 ;
+  :aChevaux 600 ;
+  :aCylindres 6 ;
+  :aConsommation 12.0 .
+
+:Veyron rdf:type :Voiture ;
+  :produitePar :Bugatti ;
+  :aTypeCarburant :Essence ;
+  :aStyle :StyleSport ;
+  :aPrix 1500000.00 ;
+  :aChevaux 1000 ;
+  :aCylindres 16 ;
+  :aConsommation 20.0 .
+
