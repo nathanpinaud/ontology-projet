@@ -67,7 +67,7 @@ app.get("/style", async (req, res) => {
     const formattedResults = [];
     g.query(results, (row) => {
       console.log(row);
-      formattedResults.push(row.style.value.split("#")[1]);
+      formattedResults.push(row["?style"].value.split("#")[1]);
     });
     setTimeout(() => {
       res.json({ results: formattedResults });
@@ -89,7 +89,7 @@ app.get("/carburant", async (req, res) => {
     const results = rdf.SPARQLToQuery(query, false, g);
     const formattedResults = [];
     g.query(results, (row) => {
-      formattedResults.push(row.carburant.value.split("#")[1]);
+      formattedResults.push(row["?carburant"].value.split("#")[1]);
     });
     setTimeout(() => {
       res.json({ results: formattedResults });
@@ -111,7 +111,7 @@ app.get("/marques", async (req, res) => {
     const results = rdf.SPARQLToQuery(query, false, g);
     const formattedResults = [];
     g.query(results, (row) => {
-      formattedResults.push(row.marque.value.split("#")[1]);
+      formattedResults.push(row["?marque"].value.split("#")[1]);
     });
     setTimeout(() => {
       res.json({ results: formattedResults });
@@ -134,7 +134,7 @@ app.get("/cylindre", async (req, res) => {
     const results = rdf.SPARQLToQuery(query, false, g);
     const formattedResults = [];
     g.query(results, (row) => {
-      formattedResults.push(row.cylindre.value.split("#")[1]);
+      formattedResults.push(row["?cylindre"].value.split("#")[1]);
     });
     setTimeout(() => {
       res.json({ results: formattedResults });
@@ -158,7 +158,7 @@ app.get("/consommation", async (req, res) => {
     const results = rdf.SPARQLToQuery(query, false, g);
     const formattedResults = [];
     g.query(results, (row) => {
-      formattedResults.push(row.consommation.value.split("#")[1]);
+      formattedResults.push(row["?consommation"].value.split("#")[1]);
     });
     setTimeout(() => {
       res.json({ results: formattedResults });

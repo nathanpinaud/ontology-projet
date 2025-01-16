@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar, Table } from "flowbite-react";
 import { HiSearch } from "react-icons/hi";
 
@@ -36,6 +36,53 @@ function App() {
       setError("Erreur lors de la récupération des données.");
     }
   };
+
+  const fetchStyles = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/style");
+      const data = await response.json();
+      console.log(data);
+    } catch (err) {
+      console.error("Erreur lors de la récupération des styles.");
+    }
+  };
+
+  const fetchMarques = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/marques");
+      const data = await response.json();
+      console.log(data);
+    } catch (err) {
+      console.error("Erreur lors de la récupération des marques.");
+    }
+  };
+
+  const fetchCarburants = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/carburant");
+      const data = await response.json();
+      console.log(data);
+    } catch (err) {
+      console.error("Erreur lors de la récupération des carburants.");
+    }
+  };
+
+  const fetchCylindre = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/cylindre");
+      const data = await response.json();
+      console.log(data);
+    } catch (err) {
+      console.error("Erreur lors de la récupération des cylindres.");
+    }
+  };
+
+  useEffect(() => {
+    fetchStyles();
+    fetchMarques();
+    fetchCarburants();
+    fetchCylindre();
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
