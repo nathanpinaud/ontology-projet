@@ -220,10 +220,16 @@ app.get("/voitures", async (req, res) => {
     g.query(results, (row) => {
       console.log(row);
       formattedResults.push({
-        voiture: row["?voiture"].value.split("#")[1],
-        marque: row["?marque"].value.split("#")[1],
-        //style: row["?Style"].value.split("#")[1],
-        carburant: row["?TypeCarburant"].value.split("#")[1],
+        voiture: row["?voiture"].value.split("#")[1] ?? "",
+        marque: row["?marque"] ? row["?marque"].value.split("#")[1] : marque,
+        style: row["?style"] ? row["?Style"].value.split("#")[1] : style,
+        carburant: row["?TypeCarburant"]
+          ? row["?TypeCarburant"].value.split("#")[1]
+          : carburant,
+        cylindre: row["?Cylindre"] ? row["?Cylindre"].value : cylindre,
+        consommation: row["?Consommation"]
+          ? row["?Consommation"].value
+          : consommation,
       });
     });
     setTimeout(() => {
