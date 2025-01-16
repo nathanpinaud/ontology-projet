@@ -8,9 +8,11 @@ function App() {
   const [style, setStyle] = useState(""); // Filtre pour le style
   const [carburant, setCarburant] = useState(""); // Filtre pour le carburant
   const [marque, setMarque] = useState(""); // Filtre pour la marque
-  const [consommation, setConsommation] = useState(""); // Filtre pour la consommation
+  const [consommationMin, setConsommationMin] = useState(""); // Consommation min
+  const [consommationMax, setConsommationMax] = useState(""); // Consommation max
+  const [puissanceMin, setPuissanceMin] = useState(""); // Puissance min
+  const [puissanceMax, setPuissanceMax] = useState(""); // Puissance max
   const [cylindres, setCylindres] = useState(""); // Filtre pour le nombre de cylindres
-  const [puissance, setPuissance] = useState(""); // Filtre pour la puissance
   const [voitures, setVoitures] = useState([]); // Résultats de recherche
   const [error, setError] = useState(null); // Gestion des erreurs
 
@@ -29,9 +31,11 @@ function App() {
         style,
         carburant,
         marque,
-        consommation,
+        consommationMin,
+        consommationMax,
+        puissanceMin,
+        puissanceMax,
         cylindres,
-        puissance,
       };
 
       // Exclure les champs vides
@@ -185,22 +189,27 @@ function App() {
                   </select>
                 </div>
 
-                {/* Filtre : Consommation */}
+                {/* Filtre : Consommation (min & max) */}
                 <div>
-                  <label
-                    htmlFor="consommation"
-                    className="block text-sm font-medium text-gray-900"
-                  >
+                  <label className="block text-sm font-medium text-gray-900">
                     Consommation (L/100km)
                   </label>
-                  <input
-                    type="number"
-                    id="consommation"
-                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
-                    value={consommation}
-                    onChange={(e) => setConsommation(e.target.value)}
-                    placeholder="Ex: 5.5"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      className="w-1/2 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
+                      value={consommationMin}
+                      onChange={(e) => setConsommationMin(e.target.value)}
+                      placeholder="Min"
+                    />
+                    <input
+                      type="number"
+                      className="w-1/2 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
+                      value={consommationMax}
+                      onChange={(e) => setConsommationMax(e.target.value)}
+                      placeholder="Max"
+                    />
+                  </div>
                 </div>
 
                 {/* Filtre : Nombre de cylindres */}
@@ -226,22 +235,27 @@ function App() {
                   </select>
                 </div>
 
-                {/* Filtre : Puissance */}
+                {/* Filtre : Puissance (min & max) */}
                 <div>
-                  <label
-                    htmlFor="puissance"
-                    className="block text-sm font-medium text-gray-900"
-                  >
+                  <label className="block text-sm font-medium text-gray-900">
                     Puissance (CV)
                   </label>
-                  <input
-                    type="number"
-                    id="puissance"
-                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
-                    value={puissance}
-                    onChange={(e) => setPuissance(e.target.value)}
-                    placeholder="Ex: 150"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      className="w-1/2 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
+                      value={puissanceMin}
+                      onChange={(e) => setPuissanceMin(e.target.value)}
+                      placeholder="Min"
+                    />
+                    <input
+                      type="number"
+                      className="w-1/2 border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500"
+                      value={puissanceMax}
+                      onChange={(e) => setPuissanceMax(e.target.value)}
+                      placeholder="Max"
+                    />
+                  </div>
                 </div>
 
                 {/* Gestion des erreurs */}
