@@ -66,7 +66,6 @@ app.get("/style", async (req, res) => {
     const results = rdf.SPARQLToQuery(query, false, g);
     const formattedResults = [];
     g.query(results, (row) => {
-      console.log(row);
       formattedResults.push(row["?style"].value.split("#")[1]);
     });
     setTimeout(() => {
@@ -89,6 +88,7 @@ app.get("/carburant", async (req, res) => {
     const results = rdf.SPARQLToQuery(query, false, g);
     const formattedResults = [];
     g.query(results, (row) => {
+      console.log(row);
       formattedResults.push(row["?carburant"].value.split("#")[1]);
     });
     setTimeout(() => {
@@ -171,37 +171,64 @@ app.get("/consommation", async (req, res) => {
 // endpoint pour rechercher des voitures par plusieurs critères facultatifs
 app.get("/voitures", async (req, res) => {
   const { marque, style, carburant, cylindre, consommation } = req.query;
+  console.log("marque", marque);
+  console.log("style", style);
+  console.log("carburant", carburant);
+  console.log("cylindre", cylindre);
+  console.log("consommation", consommation);
+
   let query = `
             PREFIX : <http://example.org/ontologies/voiture#>
-            SELECT ?voiture ?marque
+            SELECT ?voiture ?marque ?Style ?TypeCarburant ?Cylindre ?Consommation
             WHERE {
             ?voiture rdf:type :Voiture .
         `;
-  if (marque) {
-    query += `?voiture :aPourMarque :${marque} .`;
-  }
-  if (style) {
-    query += `?voiture :aPourStyle :${style} .`;
-  }
-  if (carburant) {
-    query += `?voiture :aPourTypeCarburant :${carburant} .`;
-  }
-  if (cylindre) {
-    query += `?voiture :aPourCylindre :${cylindre} .`;
-  }
-  if (consommation) {
-    query += `?voiture :aPourConsommation :${consommation} .`;
-  }
+
+  marque
+    ? (query += `?voiture :produitePar :${marque} .
+    `)
+    : (query += `?voiture :produitePar ?marque .
+    `);
+
+  style
+    ? (query += `?voiture :aStyle :${style} .
+    `)
+    : (query += `?voiture :aStyle ?Style .
+    `);
+  carburant
+    ? (query += `?voiture :aTypeCarburant :${carburant} .
+    `)
+    : (query += `?voiture :aTypeCarburant ?TypeCarburant .
+    `);
+
+  cylindre
+    ? (query += `?voiture :aCylindres :${cylindre} .
+    `)
+    : (query += `?voiture :aCylindres ?Cylindre .
+    `);
+
+  consommation
+    ? (query += `?voiture :aConsommation :${consommation} .
+    `)
+    : (query += `?voiture :aConsommation ?Consommation .
+    `);
   query += `}`;
+  console.log(query);
   try {
     const results = rdf.SPARQLToQuery(query, false, g);
     const formattedResults = [];
     g.query(results, (row) => {
-      formattedResults.push(row.consommation.value.split("#")[1]);
+      console.log(row);
+      formattedResults.push({
+        voiture: row["?voiture"].value.split("#")[1],
+        marque: row["?marque"].value.split("#")[1],
+        style: row["?Style"].value.split("#")[1],
+        //carburant: row["?TypeCarburant"].value.split("#")[1],
+      });
     });
     setTimeout(() => {
       res.json({ results: formattedResults });
-    }, 2000);
+    }, 5000);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

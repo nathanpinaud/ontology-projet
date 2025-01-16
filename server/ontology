@@ -26,6 +26,10 @@
 :PapaPresse rdf:type :Style .
 :StyleKeke rdf:type :Style .
 
+:Essence rdf:type :TypeCarburant .
+:Electrique rdf:type :TypeCarburant .
+:Diesel rdf:type :TypeCarburant . 
+
 :Tesla rdf:type :Marque .
 :Toyota rdf:type :Marque .
 :Volkswagen rdf:type :Marque .
@@ -51,7 +55,7 @@
 
 :ModelS rdf:type :Voiture ;
   :produitePar :Tesla ;
-  :aTypeCarburant :Électrique ;
+  :aTypeCarburant :Electrique ;
   :estConçuePour :Urbain ;
   :aStyle :StyleSport ;
   :aPrix 90000.00 ;
