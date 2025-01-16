@@ -1,0 +1,142 @@
+@prefix : <http://example.org/ontologies/voiture#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+:Voiture rdf:type rdfs:Class .
+:Marque rdf:type rdfs:Class .
+:TypeCarburant rdf:type rdfs:Class .
+:Usage rdf:type rdfs:Class .
+:Style rdf:type rdfs:Class .
+
+:produitePar rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range :Marque .
+:aTypeCarburant rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range :TypeCarburant .
+:estConçuePour rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range :Usage .
+:aStyle rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range :Style .
+
+:aPrix rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range xsd:decimal .
+:aChevaux rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range xsd:integer .
+:aCylindres rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range xsd:integer .
+:aConsommation rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range xsd:decimal .
+
+:StyleSport rdf:type :Style .
+:LigneDroite rdf:type :Style .
+:Femme rdf:type :Style .
+:Urbain rdf:type :Usage .
+:PapaPresse rdf:type :Style .
+:StyleKeke rdf:type :Style .
+
+:Tesla rdf:type :Marque .
+:Toyota rdf:type :Marque .
+:Volkswagen rdf:type :Marque .
+:Fiat rdf:type :Marque .
+:Renault rdf:type :Marque .
+:Peugeot rdf:type :Marque .
+:Audi rdf:type :Marque .
+:BMW rdf:type :Marque .
+
+:Adria rdf:type :Marque .
+:Autostar rdf:type :Marque .
+:Bavaria rdf:type :Marque .
+:Benimar rdf:type :Marque .
+:Bürstner rdf:type :Marque .
+
+:VanActivePro rdf:type :Voiture ;
+  :produitePar :Adria ;
+  :aTypeCarburant :Diesel ;
+  :aPrix 50000.00 ;
+  :aChevaux 150 ;
+  :aCylindres 4 ;
+  :aConsommation 8.5 .
+
+:ModelS rdf:type :Voiture ;
+  :produitePar :Tesla ;
+  :aTypeCarburant :Électrique ;
+  :estConçuePour :Urbain ;
+  :aStyle :StyleSport ;
+  :aPrix 90000.00 ;
+  :aChevaux 1020 ;
+  :aCylindres 0 ;  # Électrique
+  :aConsommation 0.0 .
+
+:Supra rdf:type :Voiture ;
+  :produitePar :Toyota ;
+  :aTypeCarburant :Essence ;
+  :aStyle :LigneDroite ;
+  :aPrix 60000.00 ;
+  :aChevaux 340 ;
+  :aCylindres 6 ;
+  :aConsommation 10.5 .
+
+:GolfGTI rdf:type :Voiture ;
+  :produitePar :Volkswagen ;
+  :aTypeCarburant :Essence ;
+  :aStyle :LigneDroite ;
+  :aPrix 40000.00 ;
+  :aChevaux 245 ;
+  :aCylindres 4 ;
+  :aConsommation 7.5 .
+
+:500 rdf:type :Voiture ;
+  :produitePar :Fiat ;
+  :aTypeCarburant :Essence ;
+  :aStyle :Femme ;
+  :aPrix 20000.00 ;
+  :aChevaux 70 ;
+  :aCylindres 2 ;
+  :aConsommation 5.5 .
+
+:RS3 rdf:type :Voiture ;
+  :produitePar :Audi ;
+  :aTypeCarburant :Essence ;
+  :aStyle :StyleSport ;
+  :aPrix 65000.00 ;
+  :aChevaux 400 ;
+  :aCylindres 5 ;
+  :aConsommation 9.0 .
+
+:RS6 rdf:type :Voiture ;
+  :produitePar :Audi ;
+  :aTypeCarburant :Essence ;
+  :aStyle :PapaPresse ;
+  :aPrix 120000.00 ;
+  :aChevaux 600 ;
+  :aCylindres 8 ;
+  :aConsommation 12.5 .
+
+:M2 rdf:type :Voiture ;
+  :produitePar :BMW ;
+  :aTypeCarburant :Essence ;
+  :aStyle :StyleKeke ;
+  :aPrix 70000.00 ;
+  :aChevaux 460 ;
+  :aCylindres 6 ;
+  :aConsommation 10.0 .
+
+# Exemples de voitures plus lambda
+:Clio rdf:type :Voiture ;
+  :produitePar :Renault ;
+  :aTypeCarburant :Essence ;
+  :aStyle :Urbain ;
+  :aPrix 18000.00 ;
+  :aChevaux 90 ;
+  :aCylindres 3 ;
+  :aConsommation 5.0 .
+
+:208 rdf:type :Voiture ;
+  :produitePar :Peugeot ;
+  :aTypeCarburant :Diesel ;
+  :aStyle :Urbain ;
+  :aPrix 20000.00 ;
+  :aChevaux 100 ;
+  :aCylindres 4 ;
+  :aConsommation 4.5 .
+
+:Mégane rdf:type :Voiture ;
+  :produitePar :Renault ;
+  :aTypeCarburant :Diesel ;
+  :aStyle :Urbain ;
+  :aPrix 25000.00 ;
+  :aChevaux 115 ;
+  :aCylindres 4 ;
+  :aConsommation 4.8 .
