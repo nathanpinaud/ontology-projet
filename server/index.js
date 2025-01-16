@@ -7,6 +7,14 @@ const port = 3000;
 
 app.use(bodyParser.json());
 
+// cors allow
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
 // Création du graphe
 const g = rdf.graph();
 
@@ -21,7 +29,7 @@ const ontologie = `
   :TypeCarburant rdf:type rdfs:Class .
   :Usage rdf:type rdfs:Class .
   :Style rdf:type rdfs:Class .
-
+ 
   :produitePar rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range :Marque .
   :aTypeCarburant rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range :TypeCarburant .
   :estConçuePour rdf:type rdf:Property ; rdfs:domain :Voiture ; rdfs:range :Usage .
@@ -60,6 +68,26 @@ rdf.parse(
   "text/turtle"
 );
 
+const executeQuery = (query) => {
+  return new Promise((resolve, reject) => {
+    const results = [];
+    g.query(
+      rdf.SPARQLToQuery(query, false, g),
+      (row) => {
+        results.push({
+          voiture: row["?voiture"].value.split("#")[1],
+          marque: row["?marque"].value.split("#")[1],
+        });
+      },
+      {},
+      (err) => {
+        if (err) reject(err);
+        resolve(results);
+      }
+    );
+  });
+};
+
 // Endpoint pour rechercher des voitures par style
 app.get("/voitures/style", (req, res) => {
   const style = req.query.style;
@@ -87,7 +115,7 @@ app.get("/voitures/style", (req, res) => {
 });
 
 // Endpoint pour rechercher des voitures par type de carburant
-app.get("/voitures/carburant", (req, res) => {
+app.get("/voitures/carburant", async (req, res) => {
   const carburant = req.query.carburant;
   const query = `
     PREFIX : <http://example.org/ontologies/voiture#>
@@ -99,14 +127,17 @@ app.get("/voitures/carburant", (req, res) => {
   `;
   try {
     const results = rdf.SPARQLToQuery(query, false, g);
-    const formattedResults = [];
+    let formattedResults = [];
     g.query(results, (row) => {
       formattedResults.push({
-        voiture: row.voiture.value.split("#")[1],
-        marque: row.marque.value.split("#")[1],
+        voiture: row["?voiture"].value.split("#")[1],
+        marque: row["?marque"].value.split("#")[1],
       });
     });
-    res.json({ results: formattedResults });
+
+    setTimeout(() => {
+      res.json({ results: formattedResults });
+    }, 2000);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
