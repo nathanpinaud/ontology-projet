@@ -179,9 +179,10 @@ app.get("/voitures", async (req, res) => {
 
   let query = `
             PREFIX : <http://example.org/ontologies/voiture#>
-            SELECT ?voiture ?marque ?style ?typecarburant ?cylindre ?consommation
+            SELECT ?voiture ?marque ?style ?typecarburant ?cylindre ?consommation 
             WHERE {
             ?voiture rdf:type :Voiture .
+            ?voiture :aPrix ?prix .
         `;
 
   marque
@@ -212,6 +213,7 @@ app.get("/voitures", async (req, res) => {
     `)
     : (query += `?voiture :aConsommation ?Consommation .
     `);
+
   query += `}`;
   console.log(query);
   try {
@@ -230,6 +232,7 @@ app.get("/voitures", async (req, res) => {
         consommation: row["?Consommation"]
           ? row["?Consommation"].value
           : consommation,
+        prix: row["?prix"] ? row["?prix"].value : "",
       });
     });
     setTimeout(() => {
