@@ -18,17 +18,23 @@ function App() {
   const fetchByAllFilters = async () => {
     setError(null); // Réinitialiser les erreurs
     try {
-      const queryParams = new URLSearchParams({
+      // Construire dynamiquement les paramètres de la requête
+      const filters = {
         style,
         carburant,
         marque,
         consommation,
         cylindres,
         puissance,
-      });
+      };
+
+      // Exclure les champs vides
+      const queryParams = new URLSearchParams(
+        Object.entries(filters).filter(([_, value]) => value)
+      );
 
       const response = await fetch(
-        `http://localhost:3000/voitures?${queryParams}`
+        `http://localhost:3000/voitures?${queryParams.toString()}`
       );
       const data = await response.json();
       setVoitures(data.results || []);
