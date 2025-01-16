@@ -1,40 +1,34 @@
+"use client";
+
 import React, { useState } from "react";
-import "./App.css";
+import { Sidebar, Table } from "flowbite-react";
+import { HiSearch } from "react-icons/hi";
 
 function App() {
   const [style, setStyle] = useState(""); // Filtre pour le style
   const [carburant, setCarburant] = useState(""); // Filtre pour le carburant
+  const [marque, setMarque] = useState(""); // Filtre pour la marque
+  const [consommation, setConsommation] = useState(""); // Filtre pour la consommation
+  const [cylindres, setCylindres] = useState(""); // Filtre pour le nombre de cylindres
+  const [puissance, setPuissance] = useState(""); // Filtre pour la puissance
   const [voitures, setVoitures] = useState([]); // Résultats de recherche
   const [error, setError] = useState(null); // Gestion des erreurs
 
-  // Fonction pour rechercher les voitures par style
-  const fetchByStyle = async () => {
-    if (!style) {
-      setError("Veuillez sélectionner un style.");
-      return;
-    }
-    setError(null); // Réinitialiser l'erreur
+  // Fonction de recherche combinée
+  const fetchByAllFilters = async () => {
+    setError(null); // Réinitialiser les erreurs
     try {
-      const response = await fetch(
-        `http://localhost:3000/voitures/style?style=${style}`
-      );
-      const data = await response.json();
-      setVoitures(data.results || []);
-    } catch (err) {
-      setError("Erreur lors de la récupération des données.");
-    }
-  };
+      const queryParams = new URLSearchParams({
+        style,
+        carburant,
+        marque,
+        consommation,
+        cylindres,
+        puissance,
+      });
 
-  // Fonction pour rechercher les voitures par type de carburant
-  const fetchByCarburant = async () => {
-    if (!carburant) {
-      setError("Veuillez sélectionner un type de carburant.");
-      return;
-    }
-    setError(null); // Réinitialiser l'erreur
-    try {
       const response = await fetch(
-        `http://localhost:3000/voitures/carburant?carburant=${carburant}`
+        `http://localhost:3000/voitures?${queryParams}`
       );
       const data = await response.json();
       setVoitures(data.results || []);
@@ -44,59 +38,194 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Moteur de Recherche de Voitures</h1>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Colonne gauche : Filtres */}
+      <div className="bg-gray-300">
+        <Sidebar aria-label="Filtres">
+          <Sidebar.Items>
+            <Sidebar.ItemGroup>
+              <Sidebar.Item icon={HiSearch}>
+                <h2 className="ml-2 text-lg font-bold">Filtres</h2>
+              </Sidebar.Item>
+              <div className="p-4 space-y-4">
+                {/* Bouton de recherche globale */}
+                <button
+                  onClick={fetchByAllFilters}
+                  className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 font-bold"
+                >
+                  Rechercher
+                </button>
 
-      <div className="filters">
-        {/* Filtre pour le style */}
-        <div>
-          <label htmlFor="style">Style :</label>
-          <select
-            id="style"
-            value={style}
-            onChange={(e) => setStyle(e.target.value)}
-          >
-            <option value="">-- Sélectionnez un style --</option>
-            <option value="StyleSport">Sport</option>
-            <option value="LigneDroite">Ligne Droite</option>
-            <option value="Urbain">Urbain</option>
-          </select>
-          <button onClick={fetchByStyle}>Rechercher par Style</button>
-        </div>
+                {/* Filtre : Style */}
+                <div>
+                  <label
+                    htmlFor="style"
+                    className="block text-sm font-medium text-gray-900"
+                  >
+                    Style
+                  </label>
+                  <select
+                    id="style"
+                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
+                    value={style}
+                    onChange={(e) => setStyle(e.target.value)}
+                  >
+                    <option value="">-- Sélectionnez un style --</option>
+                    <option value="StyleSport">Sport</option>
+                    <option value="LigneDroite">Ligne Droite</option>
+                    <option value="Urbain">Urbain</option>
+                  </select>
+                </div>
 
-        {/* Filtre pour le type de carburant */}
-        <div>
-          <label htmlFor="carburant">Type de Carburant :</label>
-          <select
-            id="carburant"
-            value={carburant}
-            onChange={(e) => setCarburant(e.target.value)}
-          >
-            <option value="">-- Sélectionnez un type de carburant --</option>
-            <option value="Électrique">Électrique</option>
-            <option value="Essence">Essence</option>
-          </select>
-          <button onClick={fetchByCarburant}>Rechercher par Carburant</button>
-        </div>
+                {/* Filtre : Type de carburant */}
+                <div>
+                  <label
+                    htmlFor="carburant"
+                    className="block text-sm font-medium text-gray-900"
+                  >
+                    Type de Carburant
+                  </label>
+                  <select
+                    id="carburant"
+                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
+                    value={carburant}
+                    onChange={(e) => setCarburant(e.target.value)}
+                  >
+                    <option value="">-- Sélectionnez un type --</option>
+                    <option value="Électrique">Électrique</option>
+                    <option value="Essence">Essence</option>
+                  </select>
+                </div>
+
+                {/* Filtre : Marque */}
+                <div>
+                  <label
+                    htmlFor="marque"
+                    className="block text-sm font-medium text-gray-900"
+                  >
+                    Marque
+                  </label>
+                  <select
+                    id="marque"
+                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
+                    value={marque}
+                    onChange={(e) => setMarque(e.target.value)}
+                  >
+                    <option value="">-- Sélectionnez une marque --</option>
+                    <option value="Tesla">Tesla</option>
+                    <option value="Ford">Ford</option>
+                    <option value="BMW">BMW</option>
+                  </select>
+                </div>
+
+                {/* Filtre : Consommation */}
+                <div>
+                  <label
+                    htmlFor="consommation"
+                    className="block text-sm font-medium text-gray-900"
+                  >
+                    Consommation (L/100km)
+                  </label>
+                  <input
+                    type="number"
+                    id="consommation"
+                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
+                    value={consommation}
+                    onChange={(e) => setConsommation(e.target.value)}
+                    placeholder="Ex: 5.5"
+                  />
+                </div>
+
+                {/* Filtre : Nombre de cylindres */}
+                <div>
+                  <label
+                    htmlFor="cylindres"
+                    className="block text-sm font-medium text-gray-900"
+                  >
+                    Nombre de Cylindres
+                  </label>
+                  <input
+                    type="number"
+                    id="cylindres"
+                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
+                    value={cylindres}
+                    onChange={(e) => setCylindres(e.target.value)}
+                    placeholder="Ex: 4"
+                  />
+                </div>
+
+                {/* Filtre : Puissance */}
+                <div>
+                  <label
+                    htmlFor="puissance"
+                    className="block text-sm font-medium text-gray-900"
+                  >
+                    Puissance (CV)
+                  </label>
+                  <input
+                    type="number"
+                    id="puissance"
+                    className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
+                    value={puissance}
+                    onChange={(e) => setPuissance(e.target.value)}
+                    placeholder="Ex: 150"
+                  />
+                </div>
+
+                {/* Gestion des erreurs */}
+                {error && (
+                  <p className="text-red-500 font-medium text-sm">{error}</p>
+                )}
+              </div>
+            </Sidebar.ItemGroup>
+          </Sidebar.Items>
+        </Sidebar>
       </div>
 
-      {/* Gestion des erreurs */}
-      {error && <p className="error">{error}</p>}
-
-      {/* Affichage des résultats */}
-      <div className="results">
-        <h2>Résultats :</h2>
-        {voitures.length > 0 ? (
-          <ul>
-            {voitures.map((voiture, index) => (
-              <li key={index}>
-                <strong>{voiture.voiture}</strong> - {voiture.marque}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>Aucun résultat trouvé.</p>
-        )}
+      {/* Colonne droite : Résultats */}
+      <div className="flex-1 p-6">
+        <h1 className="text-2xl font-bold mb-6 text-gray-800">Résultats</h1>
+        <div className="overflow-x-auto">
+          <Table hoverable>
+            <Table.Head>
+              <Table.HeadCell>Voiture</Table.HeadCell>
+              <Table.HeadCell>Marque</Table.HeadCell>
+              <Table.HeadCell>Style</Table.HeadCell>
+              <Table.HeadCell>Carburant</Table.HeadCell>
+              <Table.HeadCell>Consommation</Table.HeadCell>
+              <Table.HeadCell>Cylindres</Table.HeadCell>
+              <Table.HeadCell>Puissance</Table.HeadCell>
+              <Table.HeadCell>Prix</Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {voitures.length > 0 ? (
+                voitures.map((voiture, index) => (
+                  <Table.Row
+                    key={index}
+                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                  >
+                    <Table.Cell className="font-medium text-gray-900 dark:text-white">
+                      {voiture.voiture}
+                    </Table.Cell>
+                    <Table.Cell>{voiture.marque}</Table.Cell>
+                    <Table.Cell>{voiture.style}</Table.Cell>
+                    <Table.Cell>{voiture.carburant}</Table.Cell>
+                    <Table.Cell>{voiture.consommation}</Table.Cell>
+                    <Table.Cell>{voiture.cylindres}</Table.Cell>
+                    <Table.Cell>{voiture.puissance}</Table.Cell>
+                    <Table.Cell>{voiture.prix}</Table.Cell>
+                  </Table.Row>
+                ))
+              ) : (
+                <Table.Row>
+                  <Table.Cell colSpan={8} className="text-center text-gray-500">
+                    Aucun résultat trouvé.
+                  </Table.Cell>
+                </Table.Row>
+              )}
+            </Table.Body>
+          </Table>
+        </div>
       </div>
     </div>
   );
