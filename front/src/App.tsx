@@ -310,6 +310,7 @@ function App() {
                 <Table.HeadCell>Style</Table.HeadCell>
                 <Table.HeadCell>Carburant</Table.HeadCell>
                 <Table.HeadCell>Cylindres</Table.HeadCell>
+                <Table.HeadCell>Consommation</Table.HeadCell>
                 <Table.HeadCell>Prix</Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y">
@@ -325,7 +326,8 @@ function App() {
                       <Table.Cell>{voiture.marque}</Table.Cell>
                       <Table.Cell>{voiture.style}</Table.Cell>
                       <Table.Cell>{voiture.carburant}</Table.Cell>
-                      <Table.Cell>{voiture.cylindres}</Table.Cell>
+                      <Table.Cell>{voiture.cylindre}</Table.Cell>
+                      <Table.Cell>{voiture.consommation}</Table.Cell>
                       <Table.Cell>{voiture.prix}</Table.Cell>
                     </Table.Row>
                   ))
