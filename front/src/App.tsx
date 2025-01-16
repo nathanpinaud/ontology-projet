@@ -14,6 +14,12 @@ function App() {
   const [voitures, setVoitures] = useState([]); // Résultats de recherche
   const [error, setError] = useState(null); // Gestion des erreurs
 
+  // Options dynamiques pour les selects
+  const [stylesOptions, setStylesOptions] = useState([]);
+  const [marquesOptions, setMarquesOptions] = useState([]);
+  const [carburantsOptions, setCarburantsOptions] = useState([]);
+  const [cylindresOptions, setCylindresOptions] = useState([]);
+
   // Fonction de recherche combinée
   const fetchByAllFilters = async () => {
     setError(null); // Réinitialiser les erreurs
@@ -43,11 +49,12 @@ function App() {
     }
   };
 
+  // Récupérer les options pour les selects
   const fetchStyles = async () => {
     try {
       const response = await fetch("http://localhost:3000/style");
       const data = await response.json();
-      console.log(data);
+      setStylesOptions(data.results || []);
     } catch (err) {
       console.error("Erreur lors de la récupération des styles.");
     }
@@ -57,7 +64,7 @@ function App() {
     try {
       const response = await fetch("http://localhost:3000/marques");
       const data = await response.json();
-      console.log(data);
+      setMarquesOptions(data.results || []);
     } catch (err) {
       console.error("Erreur lors de la récupération des marques.");
     }
@@ -67,17 +74,17 @@ function App() {
     try {
       const response = await fetch("http://localhost:3000/carburant");
       const data = await response.json();
-      console.log(data);
+      setCarburantsOptions(data.results || []);
     } catch (err) {
       console.error("Erreur lors de la récupération des carburants.");
     }
   };
 
-  const fetchCylindre = async () => {
+  const fetchCylindres = async () => {
     try {
       const response = await fetch("http://localhost:3000/cylindre");
       const data = await response.json();
-      console.log(data);
+      setCylindresOptions(data.results || []);
     } catch (err) {
       console.error("Erreur lors de la récupération des cylindres.");
     }
@@ -87,7 +94,7 @@ function App() {
     fetchStyles();
     fetchMarques();
     fetchCarburants();
-    fetchCylindre();
+    fetchCylindres();
   }, []);
 
   return (
@@ -124,9 +131,11 @@ function App() {
                     onChange={(e) => setStyle(e.target.value)}
                   >
                     <option value="">-- Sélectionnez un style --</option>
-                    <option value="StyleSport">Sport</option>
-                    <option value="LigneDroite">Ligne Droite</option>
-                    <option value="Urbain">Urbain</option>
+                    {stylesOptions.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -145,8 +154,11 @@ function App() {
                     onChange={(e) => setCarburant(e.target.value)}
                   >
                     <option value="">-- Sélectionnez un type --</option>
-                    <option value="Électrique">Électrique</option>
-                    <option value="Essence">Essence</option>
+                    {carburantsOptions.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -165,9 +177,11 @@ function App() {
                     onChange={(e) => setMarque(e.target.value)}
                   >
                     <option value="">-- Sélectionnez une marque --</option>
-                    <option value="Tesla">Tesla</option>
-                    <option value="Ford">Ford</option>
-                    <option value="BMW">BMW</option>
+                    {marquesOptions.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -197,14 +211,19 @@ function App() {
                   >
                     Nombre de Cylindres
                   </label>
-                  <input
-                    type="number"
+                  <select
                     id="cylindres"
                     className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:ring-2 focus:ring-blue-500"
                     value={cylindres}
                     onChange={(e) => setCylindres(e.target.value)}
-                    placeholder="Ex: 4"
-                  />
+                  >
+                    <option value="">-- Sélectionnez un nombre --</option>
+                    {cylindresOptions.map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Filtre : Puissance */}
@@ -245,9 +264,7 @@ function App() {
               <Table.HeadCell>Marque</Table.HeadCell>
               <Table.HeadCell>Style</Table.HeadCell>
               <Table.HeadCell>Carburant</Table.HeadCell>
-              <Table.HeadCell>Consommation</Table.HeadCell>
               <Table.HeadCell>Cylindres</Table.HeadCell>
-              <Table.HeadCell>Puissance</Table.HeadCell>
               <Table.HeadCell>Prix</Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -263,15 +280,13 @@ function App() {
                     <Table.Cell>{voiture.marque}</Table.Cell>
                     <Table.Cell>{voiture.style}</Table.Cell>
                     <Table.Cell>{voiture.carburant}</Table.Cell>
-                    <Table.Cell>{voiture.consommation}</Table.Cell>
                     <Table.Cell>{voiture.cylindres}</Table.Cell>
-                    <Table.Cell>{voiture.puissance}</Table.Cell>
                     <Table.Cell>{voiture.prix}</Table.Cell>
                   </Table.Row>
                 ))
               ) : (
                 <Table.Row>
-                  <Table.Cell colSpan={8} className="text-center text-gray-500">
+                  <Table.Cell colSpan={6} className="text-center text-gray-500">
                     Aucun résultat trouvé.
                   </Table.Cell>
                 </Table.Row>
