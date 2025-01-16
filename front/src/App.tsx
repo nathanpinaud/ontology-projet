@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sidebar, Table } from "flowbite-react";
+import { Sidebar, Table, Spinner } from "flowbite-react";
 import { HiSearch } from "react-icons/hi";
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
   const [cylindres, setCylindres] = useState(""); // Filtre pour le nombre de cylindres
   const [puissance, setPuissance] = useState(""); // Filtre pour la puissance
   const [voitures, setVoitures] = useState([]); // Résultats de recherche
+  const [loading, setLoading] = useState(false); // Indicateur de chargement
   const [error, setError] = useState(null); // Gestion des erreurs
 
   // Options dynamiques pour les selects
@@ -25,6 +26,7 @@ function App() {
   // Fonction de recherche combinée
   const fetchByAllFilters = async () => {
     setError(null); // Réinitialiser les erreurs
+    setLoading(true); // Activer le loader
     try {
       // Construire dynamiquement les paramètres de la requête
       const filters = {
@@ -48,6 +50,8 @@ function App() {
       setVoitures(data.results || []);
     } catch (err) {
       setError("Erreur lors de la récupération des données.");
+    } finally {
+      setLoading(false); // Désactiver le loader
     }
   };
 
@@ -293,43 +297,52 @@ function App() {
       {/* Colonne droite : Résultats */}
       <div className="flex-1 p-6">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">Résultats</h1>
-        <div className="overflow-x-auto">
-          <Table hoverable>
-            <Table.Head>
-              <Table.HeadCell>Voiture</Table.HeadCell>
-              <Table.HeadCell>Marque</Table.HeadCell>
-              <Table.HeadCell>Style</Table.HeadCell>
-              <Table.HeadCell>Carburant</Table.HeadCell>
-              <Table.HeadCell>Cylindres</Table.HeadCell>
-              <Table.HeadCell>Prix</Table.HeadCell>
-            </Table.Head>
-            <Table.Body className="divide-y">
-              {voitures.length > 0 ? (
-                voitures.map((voiture, index) => (
-                  <Table.Row
-                    key={index}
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                  >
-                    <Table.Cell className="font-medium text-gray-900 dark:text-white">
-                      {voiture.voiture}
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <Spinner size="xl" />
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table hoverable>
+              <Table.Head>
+                <Table.HeadCell>Voiture</Table.HeadCell>
+                <Table.HeadCell>Marque</Table.HeadCell>
+                <Table.HeadCell>Style</Table.HeadCell>
+                <Table.HeadCell>Carburant</Table.HeadCell>
+                <Table.HeadCell>Cylindres</Table.HeadCell>
+                <Table.HeadCell>Prix</Table.HeadCell>
+              </Table.Head>
+              <Table.Body className="divide-y">
+                {voitures.length > 0 ? (
+                  voitures.map((voiture, index) => (
+                    <Table.Row
+                      key={index}
+                      className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                    >
+                      <Table.Cell className="font-medium text-gray-900 dark:text-white">
+                        {voiture.voiture}
+                      </Table.Cell>
+                      <Table.Cell>{voiture.marque}</Table.Cell>
+                      <Table.Cell>{voiture.style}</Table.Cell>
+                      <Table.Cell>{voiture.carburant}</Table.Cell>
+                      <Table.Cell>{voiture.cylindres}</Table.Cell>
+                      <Table.Cell>{voiture.prix}</Table.Cell>
+                    </Table.Row>
+                  ))
+                ) : (
+                  <Table.Row>
+                    <Table.Cell
+                      colSpan={6}
+                      className="text-center text-gray-500"
+                    >
+                      Aucun résultat trouvé.
                     </Table.Cell>
-                    <Table.Cell>{voiture.marque}</Table.Cell>
-                    <Table.Cell>{voiture.style}</Table.Cell>
-                    <Table.Cell>{voiture.carburant}</Table.Cell>
-                    <Table.Cell>{voiture.cylindres}</Table.Cell>
-                    <Table.Cell>{voiture.prix}</Table.Cell>
                   </Table.Row>
-                ))
-              ) : (
-                <Table.Row>
-                  <Table.Cell colSpan={6} className="text-center text-gray-500">
-                    Aucun résultat trouvé.
-                  </Table.Cell>
-                </Table.Row>
-              )}
-            </Table.Body>
-          </Table>
-        </div>
+                )}
+              </Table.Body>
+            </Table>
+          </div>
+        )}
       </div>
     </div>
   );
