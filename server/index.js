@@ -168,21 +168,40 @@ app.get("/consommation", async (req, res) => {
   }
 });
 
-// endpoint pour rechercher des voitures par plusieurs critères
+// endpoint pour rechercher des voitures par plusieurs critères facultatifs
 app.get("/voitures", async (req, res) => {
-  const { style, carburant } = req.query;
+  const { marque, style, carburant, cylindre, consommation } = req.query;
   let query = `
-    PREFIX : <http://example.org/ontologies/voiture#>
-    SELECT ?voiture ?marque
-    WHERE {
-      ?voiture :aStyle :${style} ;
-               :aTypeCarburant :${carburant} ;
-               :produitePar ?marque .
-    }
-  `;
+            PREFIX : <http://example.org/ontologies/voiture#>
+            SELECT ?voiture ?marque
+            WHERE {
+            ?voiture rdf:type :Voiture .
+        `;
+  if (marque) {
+    query += `?voiture :aPourMarque :${marque} .`;
+  }
+  if (style) {
+    query += `?voiture :aPourStyle :${style} .`;
+  }
+  if (carburant) {
+    query += `?voiture :aPourTypeCarburant :${carburant} .`;
+  }
+  if (cylindre) {
+    query += `?voiture :aPourCylindre :${cylindre} .`;
+  }
+  if (consommation) {
+    query += `?voiture :aPourConsommation :${consommation} .`;
+  }
+  query += `}`;
   try {
-    const results = await executeQuery(query);
-    res.json({ results });
+    const results = rdf.SPARQLToQuery(query, false, g);
+    const formattedResults = [];
+    g.query(results, (row) => {
+      formattedResults.push(row.consommation.value.split("#")[1]);
+    });
+    setTimeout(() => {
+      res.json({ results: formattedResults });
+    }, 2000);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
